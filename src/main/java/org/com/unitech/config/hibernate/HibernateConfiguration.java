@@ -1,5 +1,7 @@
 package org.com.unitech.config.hibernate;
 
+import org.com.unitech.exceptions.DataSourceException;
+import org.com.unitech.exceptions.SessionFactoryLoadingException;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,31 +22,41 @@ import java.util.Properties;
  */
 @Configuration
 @EnableTransactionManagement
-@ComponentScan({ "org.com.unitech.config" })
-@PropertySource(value = { "classpath:database.properties" })
+@ComponentScan({"org.com.unitech.config"})
+@PropertySource(value = {"classpath:database.properties"})
 public class HibernateConfiguration {
 
     @Autowired
     private Environment environment;
 
     @Bean
-    public LocalSessionFactoryBean sessionFactory() {
-        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-        sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan(new String[]{"org.com.unitech.hibernate.model"});
-        sessionFactory.setHibernateProperties(hibernateProperties());
-        System.out.println("session Factory --" + sessionFactory);
-        return sessionFactory;
+    public LocalSessionFactoryBean sessionFactory() throws Exception {
+        try {
+            LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+            sessionFactory.setDataSource(dataSource());
+            sessionFactory.setPackagesToScan(new String[]{"org.com.unitech.hibernate.model"});
+            sessionFactory.setHibernateProperties(hibernateProperties());
+            System.out.println("session Factory --" + sessionFactory);
+            return sessionFactory;
+        } catch (DataSourceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new SessionFactoryLoadingException("Problem in Loading Session Factory--" + e);
+        }
     }
 
     @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
-        dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
-        dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
-        dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
-        return dataSource;
+    public DataSource dataSource() throws DataSourceException {
+        try {
+            DriverManagerDataSource dataSource = new DriverManagerDataSource();
+            dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
+            dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
+            dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
+            dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
+            return dataSource;
+        } catch (Exception e) {
+            throw new DataSourceException("Problem in Loading DataSource--" + e);
+        }
     }
 
     private Properties hibernateProperties() {
