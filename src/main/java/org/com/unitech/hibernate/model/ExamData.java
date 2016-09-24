@@ -29,7 +29,7 @@ public class ExamData {
     private String idservice;
 
     @Column(name = "status")
-    private int status;
+    private String status;
 
     @Column(name = "part1id")
     private int part1id;
@@ -38,16 +38,16 @@ public class ExamData {
     private int part2id;
 
     @Column(name = "time1")
-    private Date time1;
+    private String time1;
 
     @Column(name = "time1b")
-    private Date time1b;
+    private String time1b;
 
     @Column(name = "time2")
-    private Date time2;
+    private String time2;
 
     @Column(name = "time2b")
-    private Date time2b;
+    private String time2b;
 
     @Column(name = "type1id")
     private String type1id;
@@ -94,11 +94,11 @@ public class ExamData {
         this.idservice = idservice;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -118,35 +118,35 @@ public class ExamData {
         this.part2id = part2id;
     }
 
-    public Date getTime1() {
+    public String getTime1() {
         return time1;
     }
 
-    public void setTime1(Date time1) {
+    public void setTime1(String time1) {
         this.time1 = time1;
     }
 
-    public Date getTime1b() {
+    public String getTime1b() {
         return time1b;
     }
 
-    public void setTime1b(Date time1b) {
+    public void setTime1b(String time1b) {
         this.time1b = time1b;
     }
 
-    public Date getTime2() {
+    public String getTime2() {
         return time2;
     }
 
-    public void setTime2(Date time2) {
+    public void setTime2(String time2) {
         this.time2 = time2;
     }
 
-    public Date getTime2b() {
+    public String getTime2b() {
         return time2b;
     }
 
-    public void setTime2b(Date time2b) {
+    public void setTime2b(String time2b) {
         this.time2b = time2b;
     }
 
