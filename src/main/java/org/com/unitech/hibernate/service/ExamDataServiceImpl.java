@@ -18,7 +18,11 @@ public class ExamDataServiceImpl implements ExamDataService {
     @Autowired
     private ExamDataDao dao;
 
-    public List<ExamData> getInformation(int id) throws Exception {
+    public List<ExamData> getAllInformation(int id) throws Exception {
         return dao.getInformation(id);
+    }
+
+    public List<String> getSpecificInformation(int id, String field) throws Exception {
+        return dao.getSpecificInformation(id, field);
     }
 }
