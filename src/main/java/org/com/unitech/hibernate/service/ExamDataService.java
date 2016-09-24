@@ -8,5 +8,6 @@ import java.util.List;
  * Created by MohanDivya on 9/24/2016.
  */
 public interface ExamDataService {
-    List<ExamData> getInformation(int id) throws Exception;
+    List<ExamData> getAllInformation(int id) throws Exception;
+    List<String> getSpecificInformation(int id, String field) throws Exception;
 }
