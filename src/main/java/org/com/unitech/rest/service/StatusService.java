@@ -1,5 +1,8 @@
 package org.com.unitech.rest.service;
 
+import org.com.unitech.exceptions.DaoException;
+import org.com.unitech.exceptions.DataSourceException;
+import org.com.unitech.exceptions.SessionFactoryLoadingException;
 import org.com.unitech.hibernate.model.ExamData;
 import org.com.unitech.hibernate.service.ExamDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,22 +23,47 @@ import java.util.List;
 public class StatusService {
 
     @Autowired
-    ExamDataService examDataService;
+    private ExamDataService examDataService;
 
     @RequestMapping(value = "user/{id}", method = RequestMethod.GET)
-    public ResponseEntity<List<ExamData>> getStatusInformation(@PathVariable("id") int id) throws Exception {
+    public ResponseEntity<List<ExamData>> getAllStatusInformation(@PathVariable("id") int id) throws Exception {
+
+        try {
+            List<ExamData> information = examDataService.getAllInformation(id);
+
+            if (information == null || information.isEmpty()) {
+                return new ResponseEntity<List<ExamData>>(HttpStatus.NOT_FOUND);
+            } else {
+
+                return new ResponseEntity<List<ExamData>>(information, HttpStatus.OK);
+            }
+        } catch (DaoException | DataSourceException | SessionFactoryLoadingException e) {
+            System.err.println(e);
+            return new ResponseEntity<List<ExamData>>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            System.err.println(e);
+            return new ResponseEntity<List<ExamData>>(HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @RequestMapping(value = "user/{id}/{field}", method = RequestMethod.GET)
+    public ResponseEntity<List<String>> getRequiredStatusInformation(@PathVariable("id") int id, @PathVariable("field") String field) throws Exception {
 
         ExamData examData = null;
-        List<ExamData> information = examDataService.getInformation(id);
+        try {
+            List<String> information = examDataService.getSpecificInformation(id, field);
 
-        if(information == null || information.isEmpty() )
-        {
-            return new ResponseEntity<List<ExamData>>( HttpStatus.NOT_FOUND);
+            if (information == null || information.isEmpty()) {
+                return new ResponseEntity<List<String>>(HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<List<String>>(information, HttpStatus.OK);
+            }
+        } catch (DaoException | DataSourceException | SessionFactoryLoadingException e) {
+            System.err.println(e);
+            return new ResponseEntity<List<String>>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            System.err.println(e);
+            return new ResponseEntity<List<String>>(HttpStatus.FORBIDDEN);
         }
-        else {
-
-            return new ResponseEntity<List<ExamData>>(information, HttpStatus.OK);
-        }
-
     }
 }
